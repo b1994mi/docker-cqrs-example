@@ -1,0 +1,74 @@
+version: "3.8"
+services:
+  postgresql:
+    image: postgres:latest
+    ports:
+    - 5432:5432
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: temtera
+    networks:
+    - resolute
+
+  mongo:
+    image: mongo:latest
+    ports:
+    - "27017:27017"
+    restart: always
+    networks:
+    - resolute
+
+  rabbitmq:
+    image: rabbitmq:latest
+    ports:
+    - 5672:5672
+    - 15672:15672
+    networks:
+    - resolute
+
+  redis:
+    image: redis:latest
+    ports:
+    - "6379:6379"
+    networks:
+    - resolute
+
+  app-cmd:
+    build:
+      context: .
+      dockerfile: ./cmd/Dockerfile
+    ports:
+    - 5000:5000
+    depends_on:
+    - postgresql
+    - rabbitmq
+    - redis
+    networks:
+    - resolute
+
+  app-qry:
+    build:
+      context: .
+      dockerfile: ./qry/Dockerfile
+    ports:
+    - 5001:5001
+    depends_on:
+    - mongo
+    networks:
+    - resolute
+
+  app-sami:
+    build:
+      context: .
+      dockerfile: ./sami/Dockerfile
+    depends_on:
+    - rabbitmq
+    - mongo
+    networks:
+    - resolute
+
+networks:
+  resolute:
+    external:
+      name: resolute

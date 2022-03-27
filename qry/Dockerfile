@@ -1,0 +1,12 @@
+FROM golang:1.18-alpine
+
+RUN export GO111MODULE=on
+ENV APP_NAME qry
+ENV CMD_PATH main.go
+COPY ./qry $GOPATH/src/$APP_NAME
+WORKDIR $GOPATH/src/$APP_NAME
+
+RUN go build
+
+EXPOSE 5001
+CMD ./$APP_NAME
