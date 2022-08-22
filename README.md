@@ -1,5 +1,5 @@
-# test-temtera
-Technical test for Back-end at Temtera
+# Docker Example with Message Broker
+A system with CQRS style with message broker and can be deployed with docker.
 
 How to run:
 1) Make sure you have docker installed on your system
